@@ -5,6 +5,7 @@
     "global": "^4.4.0",
     "node-sass": "4.14.1",
     "open-color": "^1.8.0",
-    "sass-loader": "^11.0.1"
+    "sass-loader": "^11.0.1",
+    "styled-components": "^5.2.1"
   }
 }

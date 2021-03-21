@@ -2,6 +2,10 @@ import React from 'react';
 import Start from './Start';
 import Quiz from './Quiz';
 import Score from './Score';
+import Message from './Message';
+import Ranking from './Ranking';
+import {Route,Switch} from 'react-router-dom';
+import {withRouter} from 'react-router';
 
 class App extends React.Component {
 
@@ -10,7 +14,7 @@ class App extends React.Component {
 
     this.state = {
       name: '해리포터',
-      page: 'quiz',
+      page: 'ranking',
       list: [
         {
           question: "해리포터는 그리핀도르 기숙사 소속이다", answer:"o"
@@ -35,9 +39,12 @@ class App extends React.Component {
 
       return (
       <div className="App">
-        {this.state.page === "quiz" && (<Quiz list={this.state.list}/>)}
-        {this.state.page === "start" && (<Start name={this.state.name}/>)}
-        {this.state.page === "score" && (<Score name={this.state.name} scoreMsg={this.state.scoreMsg}/>)}
+        <Switch>
+          <Route path='/' exact component={Start}/>
+          <Route path='/quiz' exact component={Quiz}/>
+          <Route path='/message' exact component={Message}/>
+          <Route path='/ranking' exact component={Ranking}/>
+        </Switch>
       </div>
     );
   }
@@ -45,4 +52,4 @@ class App extends React.Component {
 
 
 
-export default App;
+export default withRouter(App);

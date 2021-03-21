@@ -1,20 +1,22 @@
-// 리액트 패키지를 불러옵니다.
 import React from "react";
 import styled from "styled-components";
+import {useSelector, useDispatch} from'react-redux';
 
 const BucketList = (props) => {
-  const my_lists = props.list;
+  const bucket_list = useSelector(state => state.bucket.list);
+  console.log(bucket_list)
 
   return (
     <div>
         <ListStyle>
-          {my_lists.map((list, index) => {
+          {bucket_list.map((list, index) => {
             return (
-              <ItemStyle key={index} onClick={()=>{props.history.push('/detail')}}>
-                {list}
-              </ItemStyle>
+                <ItemStyle key={index} color={list.completed? 'red': 'aliceblue'} onClick={()=>{props.history.push('/detail/'+index)}}>
+                  {list.text}
+                </ItemStyle>
             );
           })}
+          {/* <div type='button' key={index} onClick={}>삭제하기</div> */}
         </ListStyle>
     </div>
   );
@@ -31,7 +33,7 @@ const ListStyle = styled.div`
 const ItemStyle = styled.div`
   padding: 16px;
   margin: 8px;
-  background-color: aliceblue;
+  background-color: ${props => props.color};
 `;
 
 export default BucketList;
