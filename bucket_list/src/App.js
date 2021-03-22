@@ -1,26 +1,29 @@
 import React from "react";
 import BucketList from "./BucketList";
 import styled from "styled-components";
-import {withRouter} from 'react-router';
-import {Route, Switch} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {loadBucket, createBucket} from './redux/modules/bucket';
+import { withRouter } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { loadBucket, createBucket, loadBucketFB, addBucketFB } from './redux/modules/bucket';
+import { firestore } from './firebase';
 import Detail from './Detail';
 import NotFound from './NotFound';
 import Progress from './Progress';
+import Spinner from './Sppiner';
 
-const mapStateToProps= (state) => {
-  return {bucket_list: state.bucket.list};
-};
+const mapStateToProps = (state) => ({
+  bucket_list: state.bucket.list,
+  is_loaded: state.bucket.is_loaded
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
     load: () => {
-      dispatch(loadBucket());
+      dispatch(loadBucketFB());
     },
 
     create: (bucket) => {
-      dispatch(createBucket(bucket));
+      dispatch(addBucketFB(bucket));
     }
   }
 };
@@ -35,8 +38,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props)
-  }
+    this.props.load()
+  };
 
   addBucketList = () => {
     const new_item = this.text.current.value
@@ -48,26 +51,40 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Container>
-          <Title>내 버킷리스트</Title>
-          <Progress/>
-          <Line />
-          <Switch>
-            <Route path='/' exact render={(props) => <BucketList history = {props.history} list={this.props.bucket_list} />}/>
-            <Route path='/detail/:index' component = {Detail}/>
-            <Route render ={(props)=> <NotFound history={props.history} />} />
-          </Switch>
-        </Container>
-        <InputContainer>
-          <input type="text" ref={this.text} />
-          <button onClick={this.addBucketList}>추가하기</button>
-        </InputContainer>
+        {!this.props.is_loaded ? (<Spinner />) : (
+          <React.Fragment>
+            <Container>
+              <Title>내 버킷리스트</Title>
+              <Progress />
+              <Line />
+              <Switch>
+                <Route path='/' exact render={(props) => <BucketList history={props.history} list={this.props.bucket_list} />} />
+                <Route path='/detail/:index' component={Detail} />
+                <Route render={(props) => <NotFound history={props.history} />} />
+              </Switch>
+            </Container>
+            <InputContainer>
+              <Input type="text" ref={this.text} />
+              <Button onClick={this.addBucketList}>추가하기</Button>
+            </InputContainer>
 
+          </React.Fragment>
+        )}
       </div>
     );
   }
 }
-
+const Button = styled.button`
+  width:80px;
+  height:30px;
+  background-color: dodgerblue;
+  border-radius:30px;
+  border:0;
+  outline:0;
+  &:hover{
+    background-color: powderblue;
+  }
+`;
 const Container = styled.div`
   max-width: 350px;
   min-height: 80vh;
@@ -89,6 +106,9 @@ const Line = styled.hr`
 `;
 
 const InputContainer = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   max-width: 350px;
   min-height: 10vh;
   background-color: #fff;
@@ -96,6 +116,16 @@ const InputContainer = styled.div`
   margin: 20px auto;
   border-radius: 5px;
   border: 1px solid #ddd;
+`;
+
+const Input = styled.input`
+  padding:5px;
+  &:hover{
+    border-color:dodgerblue;
+  }
+  &:focus{
+    border-color:dodgerblue;
+  }
 `;
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

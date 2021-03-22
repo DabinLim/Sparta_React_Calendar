@@ -1,23 +1,26 @@
 import React from "react";
 import styled from "styled-components";
-import {useSelector, useDispatch} from'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const BucketList = (props) => {
   const bucket_list = useSelector(state => state.bucket.list);
-  console.log(bucket_list)
 
   return (
     <div>
-        <ListStyle>
-          {bucket_list.map((list, index) => {
-            return (
-                <ItemStyle key={index} color={list.completed? 'red': 'aliceblue'} onClick={()=>{props.history.push('/detail/'+index)}}>
-                  {list.text}
-                </ItemStyle>
-            );
-          })}
-          {/* <div type='button' key={index} onClick={}>삭제하기</div> */}
-        </ListStyle>
+      <ListStyle id ='up'>
+        {bucket_list.map((list, index) => {
+          return (
+            <ItemStyle key={index} completed={list.completed} onClick={() => { props.history.push('/detail/' + index) }}>
+              {list.text}
+            </ItemStyle>
+          );
+        })}
+        <ButtonBox>
+        <Button onClick={() => {
+          document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        }}>위로가기</Button>
+        </ButtonBox>
+      </ListStyle>
     </div>
   );
 };
@@ -25,7 +28,7 @@ const BucketList = (props) => {
 const ListStyle = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 50vh;
   overflow-x: hidden;
   overflow-y: auto;
 `;
@@ -33,7 +36,28 @@ const ListStyle = styled.div`
 const ItemStyle = styled.div`
   padding: 16px;
   margin: 8px;
-  background-color: ${props => props.color};
+  font-weight: 600;
+  color: ${props => props.completed ? 'white' : 'black'};
+  background-color: ${props => props.completed ? 'dodgerblue' : 'aliceblue'};
 `;
+const Button = styled.button`
+  width:80px;
+  height:30px;
+  background-color: dodgerblue;
+  border-radius:30px;
+  border:0;
+  outline:0;
+  &:hover{
+    background-color: powderblue;
+  }
+`;
+
+const ButtonBox = styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content: flex-end;
+  margin: 20px
+`;
+
 
 export default BucketList;
