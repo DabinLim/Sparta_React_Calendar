@@ -2,7 +2,7 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components';
 
-const Detail = (props) => {
+const AllTodo = (props) => {
 
     return (
         <Container>
@@ -61,4 +61,4 @@ const Details = styled.div`
 `;
 
 
-export default Detail;
+export default AllTodo;

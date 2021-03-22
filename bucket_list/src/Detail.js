@@ -23,6 +23,7 @@ const Detail = (props) => {
                     props.history.goBack();
                 }}>삭제하기</Button>
                 <Button onClick={() => {
+                    console.log(bucket_index)
                     dispatch(updateBucketFB(bucket_index));
                     props.history.goBack();
                 }}>완료하기</Button>

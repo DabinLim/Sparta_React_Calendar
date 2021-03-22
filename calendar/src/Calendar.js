@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from '@material-ui/icons';
 import styled from 'styled-components';
 import moment, { Moment as MomentTypes } from 'moment';
 import { Button } from '@material-ui/core';
+import { PlaylistAdd } from '@material-ui/icons';
 
 const Calendar = (props) => {
   function generate(props) {
@@ -19,7 +20,7 @@ const Calendar = (props) => {
               let isToday = today.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'now' : '';
               let isNotThisMonth = current.format('MM') === today.format('MM') ? '' : 'notthis';
               return (
-                <Box key={i} onClick={() => {props.history.push('/todo/'+current.format('Y')+'/'+current.format('M')+'/'+ current.format('D')) }}>
+                <Box key={i} onClick={() => { props.history.push('/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D')) }}>
                   <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
                 </Box>
               )
@@ -35,9 +36,9 @@ const Calendar = (props) => {
       <Head>
         <ArrowLeft onClick={() => {
           props.history.push('/');
-          }}/>
+        }} />
         <span className='title'>{moment().format('MMMM YYYY')}</span>
-        <ArrowRight onClick={() => {props.history.push('/')}}/>
+        <ArrowRight onClick={() => { props.history.push('/') }} />
       </Head>
       <Line />
       <Date>
@@ -68,6 +69,9 @@ const Calendar = (props) => {
       </Date>
       <ButtonContainer>
         <Button color='primary'>모든 일정 모아보기</Button>
+        <FloatContainer>
+          <PlaylistAdd className='add' onClick={() => { props.history.push('/todo/adddate') }} />
+        </FloatContainer>
       </ButtonContainer>
     </Container>
   );
@@ -147,9 +151,39 @@ const DoW = styled.div`
 
 const ButtonContainer = styled.div`
   display:flex;
-  justify-content:flex-end;
-  margin-top:20px;
-  margin-right:10px;
+  justify-content:space-between;
+  margin:20px;
+`;
+
+const FloatContainer = styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background-color:dodgerblue;
+  width:40px;
+  height:40px;
+  border-radius: 20px;
+  & .add{
+    color:white;
+  }
+  :hover{
+    background-color:powderblue;
+    & .add{
+      color:#3f51b5;
+    }
+  }
+`;
+
+const AddContainer = styled.div`
+
+`;
+
+const Explain = styled.div`
+  text-align:center;
+`;
+
+const AllTodo = styled.div`
+
 `;
 
 

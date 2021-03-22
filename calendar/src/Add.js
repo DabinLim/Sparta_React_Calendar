@@ -1,26 +1,39 @@
 import { Button, ButtonGroup } from '@material-ui/core';
-import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addCalendarFB } from './redux/modules/calendar';
+import React, {useRef, useState} from 'react';
 import styled from 'styled-components';
+
 
 const Add = (props) => {
 
+    const dispatch = useDispatch();
+    const todo_text = useRef(null);
+    const detail_text = useRef(null);
+    let url = document.location.href.split("/");
+    let day = url[url.length - 1];
+    let month = url[url.length -2];
+    let year = url[url.length -3];
     return (
         <Container>
             <AddContainer>
                 <InputContainer>
                     <Text>일정 : </Text>
-                    <TitleInput />
+                    <TitleInput ref={todo_text} />
                 </InputContainer>
                 <InputContainer>
                     <Text>상세내용 : </Text>
-                    <DetailInput />
+                    <DetailInput ref={detail_text}></DetailInput>
                 </InputContainer>
             </AddContainer>
             <ButtonContainer>
-                <Button color="primary">추가하기</Button>
+                <Button color="primary" onClick={()=>{dispatch(addCalendarFB([
+                    todo_text.current.value,detail_text.current.value,year,month,day
+                ]));
+                }}>추가하기</Button>
                 <Button color="primary" onClick={() => {
-          props.history.goBack();
-          }}>취소하기</Button>
+                    props.history.goBack();
+                }}>취소하기</Button>
             </ButtonContainer>
         </Container>
 
@@ -61,13 +74,13 @@ const Text = styled.span`
 `;
 
 const TitleInput = styled.input`
-    width:80vw;
+    width:100%;
 `;
 
 const DetailInput = styled.input`
-    width:80vw;
+    width:100%;
     height:40vh;
 `;
 
 
-export default Add;
+export default (Add);

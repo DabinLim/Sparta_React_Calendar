@@ -10,7 +10,7 @@ const Todo = (props) => {
     return(
         <Container>
             <ButtonContainer color='primary'>
-                <Button color='primary' onClick={() => {props.history.push('/todo/add/'+year+'/'+month+'/'+day)}}>추가하기</Button>
+                <Button color='primary' onClick={() => {props.history.push('/todo/add/'+year+'/'+month+'/'+day)}}>오늘 일정 추가하기</Button>
                 <Button color='primary' onClick={() => {props.history.push('/') }}>접어두기</Button>
             </ButtonContainer>
             <Line />
