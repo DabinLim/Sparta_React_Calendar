@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 const BucketList = (props) => {
   const bucket_list = useSelector(state => state.bucket.list);
-
+  console.log(bucket_list)
   return (
     <div>
       <ListStyle id ='up'>
