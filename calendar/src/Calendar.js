@@ -68,7 +68,7 @@ const Calendar = (props) => {
         {generate(props)}
       </Date>
       <ButtonContainer>
-        <Button color='primary'>모든 일정 모아보기</Button>
+        <Button color='primary' onClick={() => {props.history.push('/alltodo')}}>모든 일정 모아보기</Button>
         <FloatContainer>
           <PlaylistAdd className='add' onClick={() => { props.history.push('/todo/adddate') }} />
         </FloatContainer>

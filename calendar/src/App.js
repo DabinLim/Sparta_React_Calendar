@@ -3,10 +3,11 @@ import styled from "styled-components";
 import Calendar from './Calendar';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addCalendarFB } from './redux/modules/calendar';
+import { loadCalendarFB } from './redux/modules/calendar';
 import Todo from './Todo';
 import Add from './Add';
 import AddDate from'./AddDate';
+import AllTodo from './AllTodo';
 import { Moment as MomentTypes } from "moment";
 import { withRouter } from 'react-router';
 
@@ -18,9 +19,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
 
-    create: (calendar) => {
-      dispatch(addCalendarFB(calendar));
-    }
+    load: () => {
+      dispatch(loadCalendarFB());
+    },
   }
 };
 
@@ -31,8 +32,11 @@ class App extends React.Component {
     this.state = {
 
     };
-
   };
+  
+  componentDidMount() {
+    this.props.load()
+  }
 
   render() {
     return (
@@ -47,6 +51,7 @@ class App extends React.Component {
             } />
           <Route path='/todo/add/:year/:month/:day' render={(props) => <Add history={props.history} />} />
           <Route path='/todo/adddate' render={(props) => <AddDate history={props.history} />} />
+          <Route path='/alltodo' render={(props) => <AllTodo history={props.history} />} />
         </Switch>
       </Container>
     )

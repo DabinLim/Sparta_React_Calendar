@@ -14,6 +14,14 @@ const Add = (props) => {
     let day = url[url.length - 1];
     let month = url[url.length -2];
     let year = url[url.length -3];
+    const addTodoList = () => {
+        if(todo_text.current.value =='' || detail_text.current.value==''){
+            window.alert('일정을 입력하세요');
+        }else{
+            dispatch(addCalendarFB([todo_text.current.value,detail_text.current.value,year,month,day]));
+            props.history.goBack()
+        }
+    }
     return (
         <Container>
             <AddContainer>
@@ -27,10 +35,8 @@ const Add = (props) => {
                 </InputContainer>
             </AddContainer>
             <ButtonContainer>
-                <Button color="primary" onClick={()=>{dispatch(addCalendarFB([
-                    todo_text.current.value,detail_text.current.value,year,month,day
-                ]));
-                }}>추가하기</Button>
+                <Button color="primary" onClick={addTodoList
+                }>추가하기</Button>
                 <Button color="primary" onClick={() => {
                     props.history.goBack();
                 }}>취소하기</Button>

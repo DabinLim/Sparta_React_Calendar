@@ -1,18 +1,40 @@
-import { Button, ButtonGroup } from '@material-ui/core';
+
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const AllTodo = (props) => {
 
+    const calendar_list = useSelector(state => state.calendar.list);
     return (
         <Container>
-            <AddContainer>
-                
-            </AddContainer>
-            <ButtonContainer>
-                <Button color="primary">추가하기</Button>
-                <Button color="primary">취소하기</Button>
-            </ButtonContainer>
+            <Head>
+                <Line />
+                <ListStyle id='up'>
+                    {calendar_list.map((list, index) => {
+                        return (
+                            <TodoContainer key={index}>
+                                <Title>
+                                    {list.todo}
+                                </Title>
+                                <Detail>
+                                    {list.detail}
+                                </Detail>
+                                <DateContainer>
+                                    <Date>
+                                        {list.year}-{list.month}-{list.day}
+                                    </Date>
+                                </DateContainer>
+                            </TodoContainer>
+                        );
+                    })}
+                    <ButtonBox>
+                        <Button onClick={() => {
+                            document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                        }}>위로가기</Button>
+                    </ButtonBox>
+                </ListStyle>
+            </Head>
         </Container>
 
     )
@@ -31,34 +53,75 @@ const Container = styled.div`
     border: 1px solid #ddd;
 `;
 
-const AddContainer = styled.div`
+const ListStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  height: 50vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+const Button = styled.button`
+  width:80px;
+  height:30px;
+  background-color: dodgerblue;
+  border-radius:30px;
+  border:0;
+  outline:0;
+  &:hover{
+    background-color: powderblue;
+  }
+`;
+
+const ButtonBox = styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content: flex-end;
+  margin: 20px;
+`;
+
+const Head = styled.div`
+  display:flex;
+  position:fixed;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-evenly;
+`;
+
+const Line = styled.hr`
+  margin: 16px 0px;
+  border: 1px dotted #ddd;
+`;
+
+const TodoContainer = styled.div`
     display: flex;
-    flex-direction: column;
-`;
-
-const InputContainer = styled.div`
-    margin: 30px;
-    margin-left: 10px;
-`;
-
-const ButtonContainer = styled.div`
-    display:flex;
-    flex-direction: row;
-    justify-content:flex-end;
-`;
-
-const Text = styled.span`
-    color: #3f51b5;
+    flex-direction:column;
+    justify-content:space-between;
+    width:80%;
+    padding: 10px;
+    margin: 5px;
+    font-weight: 600;
+    background-color: aliceblue;
 `;
 
 const Title = styled.div`
-    width:80vw;
+    margin:5px;
+    font-size: large;
+`;
+const Detail = styled.div`
+    margin:10px;
+`;
+const Date = styled.div`
+    
+`;
+const DateContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-end;
+    margin:5px;
 `;
 
-const Details = styled.div`
-    width:80vw;
-    height:40vh;
-`;
 
 
 export default AllTodo;
