@@ -1,40 +1,45 @@
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, {useRef} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateCalendarFB, deleteCalendarFB } from './redux/modules/calendar';
+import { Button, ButtonGroup } from '@material-ui/core';
 import styled from 'styled-components';
 
 const AllTodo = (props) => {
-
+    const dispatch = useDispatch();
     const calendar_list = useSelector(state => state.calendar.list);
+    console.log(props)
     return (
         <Container>
-            <Head>
+            <ListStyle id='up'>
                 <Line />
-                <ListStyle id='up'>
-                    {calendar_list.map((list, index) => {
-                        return (
-                            <TodoContainer key={index}>
+                {calendar_list.map((list, index) => {
+                    return (
+                        <TodoContainer key={index}>
+                            <DateContainer>
                                 <Title>
                                     {list.todo}
                                 </Title>
-                                <Detail>
-                                    {list.detail}
-                                </Detail>
-                                <DateContainer>
-                                    <Date>
-                                        {list.year}-{list.month}-{list.day}
-                                    </Date>
-                                </DateContainer>
-                            </TodoContainer>
-                        );
-                    })}
-                    <ButtonBox>
-                        <Button onClick={() => {
-                            document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                        }}>위로가기</Button>
-                    </ButtonBox>
-                </ListStyle>
-            </Head>
+                                <Date>
+                                    {list.year}-{list.month}-{list.day}
+                                </Date>
+                            </DateContainer>
+                            <Detail>
+                                {list.detail}
+                            </Detail>
+                            <DeleteContainer>
+                                <Button color='primary' onClick={()=>{dispatch(updateCalendarFB(index))}}>완료하기</Button>
+                                <Button color='primary' onClick={()=>{dispatch(deleteCalendarFB(index))}}>삭제하기</Button>
+                            </DeleteContainer>
+                        </TodoContainer>
+                    );
+                })}
+                <ButtonBox>
+                    <ButtonUp onClick={() => {
+                        document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    }}>위로가기</ButtonUp>
+                </ButtonBox>
+            </ListStyle>
         </Container>
 
     )
@@ -62,9 +67,10 @@ const ListStyle = styled.div`
   overflow-y: auto;
 `;
 
-const Button = styled.button`
+const ButtonUp = styled.button`
   width:80px;
   height:30px;
+  margin-right: 10px;
   background-color: dodgerblue;
   border-radius:30px;
   border:0;
@@ -98,18 +104,24 @@ const TodoContainer = styled.div`
     display: flex;
     flex-direction:column;
     justify-content:space-between;
-    width:80%;
+    max-width:600px;
+    width:90%;
     padding: 10px;
     margin: 5px;
     font-weight: 600;
-    background-color: aliceblue;
+    color: ${props => props.completed ? 'white' : 'black'};
+    background-color: ${props => props.completed ? 'dodgerblue' : 'aliceblue'};
 `;
 
 const Title = styled.div`
+    max-width:60%;
+    overflow:auto;
     margin:5px;
     font-size: large;
 `;
 const Detail = styled.div`
+    overflow:auto;
+    max-width:80%;
     margin:10px;
 `;
 const Date = styled.div`
@@ -118,10 +130,20 @@ const Date = styled.div`
 const DateContainer = styled.div`
     display:flex;
     flex-direction:row;
+    justify-content:space-between;
+    margin:5px;
+`;
+
+const DeleteContainer = styled.div`
+    display:flex;
+    flex-direction:row;
     justify-content:flex-end;
     margin:5px;
 `;
 
+const Key = styled.div`
+    display:none;
+`;
 
 
 export default AllTodo;

@@ -114,7 +114,7 @@ const TitleInput = styled.input`
     width:100%;
 `;
 
-const DetailInput = styled.input`
+const DetailInput = styled.textarea`
     width:100%;
     height:40vh;
 `;

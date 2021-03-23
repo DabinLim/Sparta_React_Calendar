@@ -5,7 +5,7 @@ import moment, { Moment as MomentTypes } from 'moment';
 import { Button } from '@material-ui/core';
 import { PlaylistAdd } from '@material-ui/icons';
 
-const Calendar = (props) => {
+const AllCalendar = (props) => {
   function generate(props) {
     const today = moment();
     const startWeek = today.clone().startOf('month').week();
@@ -22,11 +22,6 @@ const Calendar = (props) => {
               return (
                 <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D')) }}>
                   <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
-                  <TodoContainer>
-                    <Todo>
-                      하이
-                    </Todo>
-                  </TodoContainer>
                 </Box>
               )
             })
@@ -40,10 +35,10 @@ const Calendar = (props) => {
     <Container>
       <Head>
         <ArrowLeft onClick={() => {
-          props.history.push('/calendar/');
+          props.history.push('/calendar');
         }} />
         <span className='title'>{moment().format('MMMM YYYY')}</span>
-        <ArrowRight onClick={() => { props.history.push('/calendar/') }} />
+        <ArrowRight onClick={() => { props.history.push('/calendar') }} />
       </Head>
       <Line />
       <Date>
@@ -75,10 +70,10 @@ const Calendar = (props) => {
       <ButtonContainer>
         <CollectContainer>
         <Button color='primary' onClick={() => {props.history.push('/calendar/alltodo')}}>모든 일정 모아보기</Button>
-        <Button color='primary' onClick={() => {props.history.push('/calendar/allcalendar')}}>모든 일정 표시하기</Button>
+        <Button color='primary' onClick={()=> {props.history.push('/calendar')}}>완료된 일정만 표시하기</Button>
         </CollectContainer>
-        <FloatContainer onClick={() => { props.history.push('/calendar/adddate')}}>
-          <PlaylistAdd className='add' />
+        <FloatContainer>
+          <PlaylistAdd className='add' onClick={() => { props.history.push('/calendar/todo/adddate') }} />
         </FloatContainer>
       </ButtonContainer>
     </Container>
@@ -123,9 +118,8 @@ const Row = styled.div`
 
 const Box = styled.div`
   position: relative;
-  display: flex;
-  flex-direction:column;
   border: dotted 1px gray;
+  display: flex;
   width: calc(100%/7);
   height: 0;
   padding-bottom: calc(100%/7);
@@ -159,14 +153,6 @@ const DoW = styled.div`
   }
 `;
 
-const TodoContainer = styled.div`
-  display:flex;
-  margin: 20px;
-  `;
-
-const Todo = styled.div`
-  overflow:auto
-`;
 const ButtonContainer = styled.div`
   display:flex;
   justify-content:space-between;
@@ -203,4 +189,4 @@ const CollectContainer = styled.div`
 
 
 
-export default Calendar;
+export default AllCalendar;
