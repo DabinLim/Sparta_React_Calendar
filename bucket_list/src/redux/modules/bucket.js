@@ -76,6 +76,7 @@ export const updateBucketFB = (index) => {
         if (!bucket_data.id) {
             return;
         }
+
         dispatch(isLoaded(false));
 
         bucket_db.doc(bucket_data.id).update(bucket_data).then(docRef => {

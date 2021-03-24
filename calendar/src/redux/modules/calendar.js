@@ -1,4 +1,5 @@
 import { firestore } from '../../firebase';
+import moment from 'moment';
 
 const calendar_db = firestore.collection('calendar');
 
@@ -6,10 +7,12 @@ const LOAD = "calendar/LOAD";
 const CREATE = "calendar/CREATE";
 const DELETE = "calendar/DELETE";
 const UPDATE = "calendar/UPDATE";
+const CHANGE = 'num/CHANGE'
 
 
 const initialState = {
-    calendar: ''
+    list:[],
+    date: moment(),
 };
 
 export const loadCalendar = (calendar) => {
@@ -28,6 +31,9 @@ export const updateCalendar = (calendar) => {
     return { type: UPDATE, calendar };
 }
 
+export const changeDate = (num) => {
+    return {type: CHANGE, num};
+}
 
 export const loadCalendarFB = () => {
     return function (dispatch) {
@@ -64,7 +70,6 @@ export const addCalendarFB = (calendar) => {
 export const updateCalendarFB = (index) => {
     return function(dispatch, getState) {
         const old_calendar_data = getState().calendar.list[index];
-
         let calendar_data = {...old_calendar_data, completed:true};
         if (!calendar_data.id) {
             return;
@@ -75,6 +80,7 @@ export const updateCalendarFB = (index) => {
         })
     };
 };
+
 
 
 export const deleteCalendarFB = (index) => {
@@ -98,9 +104,8 @@ export default function reducer(state = initialState, action = {}) {
             if (action.calendar.length > 0) {
                 let calendar_list = action.calendar
                 calendar_list.sort((a, b) => a.year - b.year || a.month - b.month || a.day - b.day)
-                console.log(calendar_list)
                 return {
-                    list:calendar_list
+                    list:calendar_list , date: moment()
                 }
             }
 
@@ -110,7 +115,7 @@ export default function reducer(state = initialState, action = {}) {
 
         case "calendar/CREATE":
             const new_todo_list = [...state.list, action.calendar,];
-            return { list: new_todo_list };
+            return { list: new_todo_list,date:state.date };
 
 
         default:
@@ -124,7 +129,44 @@ export default function reducer(state = initialState, action = {}) {
                     return l;
                 }
             })
-            return { list: calendar_list }
+            return { list: calendar_list,date:state.date }
+
+        case 'calendar/UPDATE':{
+            const calendar_list = state.list.map((l, idx) => {
+                if(idx === action.calendar){
+                    return {...l, completed: true};
+                }else{
+                    return l;
+                }
+            })
+            
+            return {list: calendar_list,date:state.date};
+        }
+
+        case 'num/CHANGE':{
+            if (action.num == 1){
+                const new_date = state.date.subtract(1,'M');
+                const calendar_list = [...state.list]
+                return {
+                    list: calendar_list,
+                    date: new_date
+                }
+            } else if(action.num ==2){
+                const new_date = state.date.add(1,'M');
+                const calendar_list = [...state.list]
+                return {
+                    list: calendar_list,
+                    date: new_date
+                }
+            }else {
+                const new_date = moment()
+                const calendar_list = [...state.list]
+                return {
+                    list: calendar_list,
+                    date: new_date
+                }
+            }
+        }
     }
             
         

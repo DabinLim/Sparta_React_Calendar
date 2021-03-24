@@ -89,4 +89,4 @@ const DetailInput = styled.input`
 `;
 
 
-export default (Add);
+export default Add;

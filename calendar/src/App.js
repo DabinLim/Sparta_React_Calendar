@@ -10,13 +10,14 @@ import Add from './Add';
 import AddDate from'./AddDate';
 import AllTodo from './AllTodo';
 import AllCalendar from './AllCalendar';
-import { Moment as MomentTypes } from "moment";
 import { withRouter } from 'react-router';
+import moment from 'moment';
 
 
 
 const mapStateToProps = (state) => ({
   calendar_list: state.calendar.list,
+  date : state.calendar.date
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -33,7 +34,6 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-
     };
   };
   
@@ -44,19 +44,19 @@ class App extends React.Component {
   render() {
     return (
       <Container>
+        <Route exact path='/' exact render={(props) => <Main history={props.history} list={this.props.calendar_list} />} />
         <Switch>
-        <Route exact path='/' exact render={(props) => <Main history={props.history} list={this.props.list} />} />
-        <Route path='/calendar' exact render ={(props) => <Calendar history={props.history} list={this.props.list}/>}/>
+          <Route path='/calendar' exact render ={(props) => <Calendar history={props.history} list={this.props.calendar_list} date={this.props.date}/>}/>
           <Route path='/calendar/todo/:year/:month/:day' render={(props) =>
             <div>
-            <Calendar history={props.history} list={this.props.list} />
-            <Todo history={props.history} />
+            <Calendar history={props.history} list={this.props.calendar_list} date={this.props.date}/>
+            <Todo history={props.history} list={this.props.calendar_list} date={this.props.date}/>
             </div>
             } />
-          <Route path='/calendar/todo/add/:year/:month/:day' render={(props) => <Add history={props.history} />} />
-          <Route path='/calendar/adddate' render={(props) => <AddDate history={props.history} />} />
-          <Route path='/calendar/alltodo' render={(props) => <AllTodo history={props.history} />} />
-          <Route path='/calendar/allcalendar' render={(props) => <AllCalendar history={props.history} />} />
+          <Route path='/add/:year/:month/:day' render={(props) => <Add history={props.history} date={this.props.date}/>} />
+          <Route path='/calendar/adddate' render={(props) => <AddDate history={props.history} date={this.props.date}/>} />
+          <Route path='/calendar/alltodo' render={(props) => <AllTodo history={props.history} list={this.props.calendar_list}/>}date={this.props.date} />
+          <Route path='/calendar/allcalendar' render={(props) => <AllCalendar history={props.history} list={this.props.calendar_list} date={this.props.date}/>} />
         </Switch>
       </Container>
     )

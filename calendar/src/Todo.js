@@ -1,10 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateCalendarFB, deleteCalendarFB } from './redux/modules/calendar';
 import { Button, ButtonGroup } from '@material-ui/core';
 import styled from "styled-components";
 
 const Todo = (props) => {
-
+    const dispatch = useDispatch();
     const calendar_list = useSelector(state => state.calendar.list);
 
     let url = document.location.href.split("/");
@@ -26,33 +27,39 @@ const Todo = (props) => {
         <Container>
             <Head>
                 <ButtonContainer color='primary'>
-                    <Button color='primary' onClick={() => { props.history.push('/calendar/todo/add/' + year + '/' + month + '/' + day) }}>오늘 일정 추가하기</Button>
+                    <Button color='primary' onClick={() => { props.history.push('/add/' + year + '/' + month + '/' + day) }}>오늘 일정 추가하기</Button>
                     <Button color='primary' onClick={() => { props.history.push('/calendar') }}>접어두기</Button>
                 </ButtonContainer>
             </Head>
             <Line />
             <ListStyle id='up'>
-            {filtered_calendar.map((list, index) => {
-                return (
-                    <TodoContainer key={index}>
-                        <DateContainer>
-                            <Title>
-                                {list.todo}
-                            </Title>
-                            <Date>
-                                {list.year}-{list.month}-{list.day}
-                            </Date>
-                        </DateContainer>
-                        <Detail>
-                            {list.detail}
-                        </Detail>
-                        <DeleteContainer>
-                            <Button color='primary'>삭제하기</Button>
-                        </DeleteContainer>
-                    </TodoContainer>
-                );
-            })}
-            <ButtonBox>
+                {filtered_calendar.map((list, index) => {
+                    return (
+                        <TodoContainer key={index} completed={list.completed}>
+                            <DateContainer>
+                                <Title>
+                                    {list.todo}
+                                </Title>
+                                <Date>
+                                    {list.year}-{list.month}-{list.day}
+                                </Date>
+                            </DateContainer>
+                            <Detail>
+                                {list.detail}
+                            </Detail>
+                            <DeleteContainer>
+                                <Button color='primary' onClick={() => {
+                                    dispatch(updateCalendarFB(calendar_list.indexOf(list)))
+                                    props.history.push('/calendar/todo/'+year+'/'+month+'/'+day)
+                                }}>완료하기</Button>
+                                <Button color='primary' onClick={() => {
+                                    dispatch(deleteCalendarFB(calendar_list.indexOf(list)))
+                                }}>삭제하기</Button>
+                            </DeleteContainer>
+                        </TodoContainer>
+                    );
+                })}
+                <ButtonBox>
                     <ButtonUp onClick={() => {
                         document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                     }}>위로가기</ButtonUp>
@@ -127,7 +134,7 @@ const TodoContainer = styled.div`
     padding: 10px;
     margin: 5px;
     font-weight: 600;
-    background-color: aliceblue;
+    background-color: ${props => props.completed ? '#ffe460b8' : 'aliceblue'};
 `;
 
 const Title = styled.div`

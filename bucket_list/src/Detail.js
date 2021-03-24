@@ -13,6 +13,7 @@ const Detail = (props) => {
 
 
     let bucket_index = parseInt(props.match.params.index);
+    console.log(props)
 
     return (
         <div>

@@ -1,5 +1,5 @@
 
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCalendarFB, deleteCalendarFB } from './redux/modules/calendar';
 import { Button, ButtonGroup } from '@material-ui/core';
@@ -15,7 +15,7 @@ const AllTodo = (props) => {
                 <Line />
                 {calendar_list.map((list, index) => {
                     return (
-                        <TodoContainer key={index}>
+                        <TodoContainer key={index} completed={list.completed}>
                             <DateContainer>
                                 <Title>
                                     {list.todo}
@@ -28,18 +28,24 @@ const AllTodo = (props) => {
                                 {list.detail}
                             </Detail>
                             <DeleteContainer>
-                                <Button color='primary' onClick={()=>{dispatch(updateCalendarFB(index))}}>완료하기</Button>
-                                <Button color='primary' onClick={()=>{dispatch(deleteCalendarFB(index))}}>삭제하기</Button>
+                                <Button color='primary' onClick={() => {
+                                    dispatch(updateCalendarFB(index))
+                                    props.history.push('/calendar/alltodo')
+                                }}>완료하기</Button>
+                                <Button color='primary' onClick={() => {
+                                    dispatch(deleteCalendarFB(index))
+                                }}>삭제하기</Button>
                             </DeleteContainer>
                         </TodoContainer>
                     );
                 })}
-                <ButtonBox>
-                    <ButtonUp onClick={() => {
-                        document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                    }}>위로가기</ButtonUp>
-                </ButtonBox>
             </ListStyle>
+                <ButtonBox>
+                    <Button color='primary' onClick={()=>{props.history.push('/calendar')}}>뒤로가기</Button>
+                    <Button color='primary' onClick={() => {
+                        document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    }}>위로가기</Button>
+                </ButtonBox>
         </Container>
 
     )
@@ -109,8 +115,7 @@ const TodoContainer = styled.div`
     padding: 10px;
     margin: 5px;
     font-weight: 600;
-    color: ${props => props.completed ? 'white' : 'black'};
-    background-color: ${props => props.completed ? 'dodgerblue' : 'aliceblue'};
+    background-color: ${props => props.completed ? '#ffe460b8' : 'aliceblue'};
 `;
 
 const Title = styled.div`
@@ -140,10 +145,5 @@ const DeleteContainer = styled.div`
     justify-content:flex-end;
     margin:5px;
 `;
-
-const Key = styled.div`
-    display:none;
-`;
-
 
 export default AllTodo;

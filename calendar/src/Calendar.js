@@ -1,31 +1,51 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeDate } from './redux/modules/calendar';
+import { ArrowLeft, ArrowRight,} from '@material-ui/icons';
+import HomeIcon from '@material-ui/icons/Home'
 import styled from 'styled-components';
-import moment, { Moment as MomentTypes } from 'moment';
+import moment from 'moment';
 import { Button } from '@material-ui/core';
 import { PlaylistAdd } from '@material-ui/icons';
 
 const Calendar = (props) => {
+  const calendar_list = useSelector(state => state.calendar.list);
+  const dispatch = useDispatch()
+
+
+  const today = moment()
   function generate(props) {
-    const today = moment();
-    const startWeek = today.clone().startOf('month').week();
-    const endWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
+    const startWeek = props.date.clone().startOf('month').week();
+    const endWeek = props.date.clone().endOf('month').week() === 1 ? 53 : props.date.clone().endOf('month').week();
     let calendar = [];
     for (let week = startWeek; week <= endWeek; week++) {
       calendar.push(
         <Row key={week}>
           {
             Array(7).fill(0).map((n, i) => {
-              let current = today.clone().week(week).startOf('week').add(n + i, 'day')
+              let current = props.date.clone().week(week).startOf('week').add(n + i, 'day')
               let isToday = today.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'now' : '';
-              let isNotThisMonth = current.format('MM') === today.format('MM') ? '' : 'notthis';
+              let isNotThisMonth = current.format('MM') === props.date.format('MM') ? '' : 'notthis';
+              const checkToday = (e) => {
+                if (e.year == current.format('Y') && e.month == current.format('M') && e.day == current.format('D')) {
+                  return true
+                }
+              }
+              const filtered_calendar = calendar_list.filter(checkToday);
               return (
                 <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D')) }}>
                   <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
                   <TodoContainer>
-                    <Todo>
-                      하이
-                    </Todo>
+                    {filtered_calendar.map((list, index) => {
+                      return (
+                        <TodoHandler key={index}>
+                          <Todo completed={list.completed}>
+                            {list.todo}
+                          </Todo>
+                          <TodoLine />
+                        </TodoHandler>
+                      )
+                    })}
                   </TodoContainer>
                 </Box>
               )
@@ -38,55 +58,62 @@ const Calendar = (props) => {
   }
   return (
     <Container>
-      <Head>
-        <ArrowLeft onClick={() => {
-          props.history.push('/calendar/');
-        }} />
-        <span className='title'>{moment().format('MMMM YYYY')}</span>
-        <ArrowRight onClick={() => { props.history.push('/calendar/') }} />
-      </Head>
-      <Line />
-      <Date>
-        <Row>
-          <Box>
-            <DoW>Sun</DoW>
-          </Box>
-          <Box>
-            <DoW>Mon</DoW>
-          </Box>
-          <Box>
-            <DoW>Tue</DoW>
-          </Box>
-          <Box>
-            <DoW>Wed</DoW>
-          </Box>
-          <Box>
-            <DoW>Thu</DoW>
-          </Box>
-          <Box>
-            <DoW>Fri</DoW>
-          </Box>
-          <Box>
-            <DoW>Sat</DoW>
-          </Box>
-        </Row>
-        {generate(props)}
-      </Date>
-      <ButtonContainer>
-        <CollectContainer>
-        <Button color='primary' onClick={() => {props.history.push('/calendar/alltodo')}}>모든 일정 모아보기</Button>
-        <Button color='primary' onClick={() => {props.history.push('/calendar/allcalendar')}}>모든 일정 표시하기</Button>
-        </CollectContainer>
-        <FloatContainer onClick={() => { props.history.push('/calendar/adddate')}}>
-          <PlaylistAdd className='add' />
-        </FloatContainer>
-      </ButtonContainer>
+      <CalendarContainer>
+        <Head>
+          <ArrowLeft onClick={() => { dispatch(changeDate(1)) }} />
+          <span className='title'>{props.date.format('MMMM YYYY')}</span>
+          <ArrowRight onClick={() => { dispatch(changeDate(2)) }} />
+        </Head>
+        <DateBack>
+          <HomeIcon fontSize="large" color='primary' onClick={() => { dispatch(changeDate(3)) }} />
+        </DateBack>
+        <Line />
+        <Date>
+          <Row>
+            <Box>
+              <DoW>Sun</DoW>
+            </Box>
+            <Box>
+              <DoW>Mon</DoW>
+            </Box>
+            <Box>
+              <DoW>Tue</DoW>
+            </Box>
+            <Box>
+              <DoW>Wed</DoW>
+            </Box>
+            <Box>
+              <DoW>Thu</DoW>
+            </Box>
+            <Box>
+              <DoW>Fri</DoW>
+            </Box>
+            <Box>
+              <DoW>Sat</DoW>
+            </Box>
+          </Row>
+          {generate(props)}
+        </Date>
+        <ButtonContainer>
+          <CollectContainer>
+            <Button color='primary' onClick={() => { props.history.push('/calendar/alltodo') }}>모든 일정 모아보기</Button>
+            <Button color='primary' onClick={() => { props.history.push('/calendar/allcalendar') }}>완료된 일정만 표시하기</Button>
+          </CollectContainer>
+          <FloatContainer onClick={() => { props.history.push('/calendar/adddate') }}>
+            <PlaylistAdd className='add' />
+          </FloatContainer>
+        </ButtonContainer>
+      </CalendarContainer>
     </Container>
+
   );
 };
-
 const Container = styled.div`
-  max-width: 1400px;
+  background-color:gray;
+`;
+
+const CalendarContainer = styled.div`
+  max-width: 1000px;
   min-height: 80vh;
   background-color: lavender;
   padding: 16px;
@@ -100,6 +127,12 @@ const Head = styled.div`
   flex-direction:row;
   align-items:center;
   justify-content:space-evenly;
+`;
+
+const DateBack = styled.div`
+  display:flex;
+  justify-content:flex-end;
+  margin-right:20px;
 `;
 
 const Line = styled.hr`
@@ -121,14 +154,13 @@ const Row = styled.div`
   margin: 10px;
 `;
 
+
 const Box = styled.div`
   position: relative;
   display: flex;
   flex-direction:column;
   border: dotted 1px gray;
   width: calc(100%/7);
-  height: 0;
-  padding-bottom: calc(100%/7);
   font-size: 12pt;
   & .notthis{
     color:gray;
@@ -141,14 +173,51 @@ const Box = styled.div`
   }
   & .now {
     color: gold;
+    background-color:dodgerblue;
+  }
+
+
+  @media (max-width:400px) {
+    height: 50px;
+  }
+
+  @media (min-width: 400px) {
+    height: 60px;
+  }
+
+  @media (min-width: 500px) {
+    height: 70px;
+  }
+
+  @media (min-width: 600px) {
+    height: 80px;
+  }
+
+  @media (min-width: 650px) {
+    height: 90px;
+  }
+
+  @media (min-width: 700px) {
+    height: 100px;
+  }
+
+  @media (min-width: 800px) {
+    height: 120px;
+  }
+  @media (min-width: 900px) {
+    height: 140px;
+  }
+  @media (min-width:1000px) {
+    height: 150px;
   }
 `;
 
+const TodoLine = styled.hr`
+  margin: 5px 0px;
+  border: 1px dotted #ddd;
+`;
 
 const DoW = styled.div`
-  padding-top:1em;
-  padding-left:0.5em;
-  padding-right:0.5em;
   text-align:center;
   width:2em;
   height:2em;
@@ -157,16 +226,69 @@ const DoW = styled.div`
     color:black;
     background:pink;
   }
+  @media (max-width:750px) {
+    padding-top:0.2em;
+    padding-left:0.1em;
+    padding-right:0.1em;
+    font-size:xx-small;
+  }
+  @media (min-width:750px) {
+    padding-top:0.5em;
+    padding-left:0.2em;
+    padding-right:0.2em;
+  }
 `;
+
+
 
 const TodoContainer = styled.div`
   display:flex;
-  margin: 20px;
+  position:relative;
+  overflow: auto;
+  color:black;
+  flex-direction:column;
+  justify-content:space-between;
+  width:80%;
+  @media (max-width:750px) {
+    margin: 0.2em;
+  }
+  @media (min-width:750px) {
+    margin: 10px;
+  }
   `;
 
-const Todo = styled.div`
-  overflow:auto
+
+const TodoHandler = styled.div`
+  margin:0;
+  padding:0;
+  height:20px;
+  width:100%;
 `;
+
+
+const Todo = styled.div`
+  padding:0.1em;
+  overflow:hidden;
+  height:10px;
+  width:100%;
+  background-color: ${props => props.completed ? '#ffe460b8' : 'aliceblue'};
+  @media (max-width:750px) {
+    margin:0;
+    font-size: xx-small; 
+    /* 왜 더 작게 안될까 */
+  }
+  @media (min-width:750px) {
+    height:15px;
+    font-size:x-small;
+  }
+
+  @media (min-width:1000px) {
+    height:15px;
+    font-size:small;
+  }
+
+`;
+
 const ButtonContainer = styled.div`
   display:flex;
   justify-content:space-between;
@@ -192,6 +314,12 @@ const FloatContainer = styled.div`
     & .add{
       color:#3f51b5;
     }
+  }
+  @media (max-width:750px) {
+    margin-top:20px;
+    width:40px;
+    height:40px;
+    border-radius:40px;
   }
 `;
 

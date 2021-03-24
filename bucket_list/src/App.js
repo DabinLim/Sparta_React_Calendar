@@ -39,6 +39,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.props.load()
+    console.log(this.props)
   };
 
   addBucketList = () => {
