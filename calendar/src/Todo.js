@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCalendarFB, deleteCalendarFB } from './redux/modules/calendar';
 import { Button, ButtonGroup } from '@material-ui/core';
 import styled from "styled-components";
 
+
 const Todo = (props) => {
     const dispatch = useDispatch();
     const calendar_list = useSelector(state => state.calendar.list);
+    useEffect(()=>{window.scrollTo({top:1000,left:0, behavior: 'smooth'})})
 
+    const scrollDown = () => {
+        window.scrollTo({top:1000 ,left:0 ,behavior:'smooth'})
+    }
     let url = document.location.href.split("/");
     let day = url[url.length - 1];
     let month = url[url.length - 2];
@@ -63,11 +68,15 @@ const Todo = (props) => {
                     <ButtonUp onClick={() => {
                         document.querySelector('#up').scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                     }}>위로가기</ButtonUp>
+                    <ButtonUp onClick={() => {
+                        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    }}>캘린더로</ButtonUp>
                 </ButtonBox>
             </ListStyle>
         </Container>
     );
 }
+
 
 
 const Container = styled.div`

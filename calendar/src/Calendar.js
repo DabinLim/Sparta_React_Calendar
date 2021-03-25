@@ -8,6 +8,8 @@ import moment from 'moment';
 import { Button } from '@material-ui/core';
 import { PlaylistAdd } from '@material-ui/icons';
 
+
+
 const Calendar = (props) => {
   const calendar_list = useSelector(state => state.calendar.list);
   const dispatch = useDispatch()
@@ -33,7 +35,8 @@ const Calendar = (props) => {
               }
               const filtered_calendar = calendar_list.filter(checkToday);
               return (
-                <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D')) }}>
+                <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D'))
+                 }}>
                   <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
                   <TodoContainer>
                     {filtered_calendar.map((list, index) => {
@@ -94,7 +97,7 @@ const Calendar = (props) => {
           </Row>
           {generate(props)}
         </Date>
-        <ButtonContainer>
+        <ButtonContainer id ='open'>
           <CollectContainer>
             <Button color='primary' onClick={() => { props.history.push('/calendar/alltodo') }}>모든 일정 모아보기</Button>
             <Button color='primary' onClick={() => { props.history.push('/calendar/allcalendar') }}>완료된 일정만 표시하기</Button>
@@ -307,6 +310,12 @@ const FloatContainer = styled.div`
   height:80px;
   border-radius: 40px;
   & .add{
+    margin: 0px;
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: fixed;
     color:white;
   }
   :hover{

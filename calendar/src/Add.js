@@ -22,6 +22,7 @@ const Add = (props) => {
             props.history.goBack()
         }
     }
+
     return (
         <Container>
             <AddContainer>
@@ -42,9 +43,9 @@ const Add = (props) => {
                 }}>취소하기</Button>
             </ButtonContainer>
         </Container>
-
     )
 }
+
 
 const Container = styled.div`
     display:flex;
@@ -54,7 +55,7 @@ const Container = styled.div`
     min-height: 60vh;
     background-color: lavender;
     padding: 16px;
-    margin: 20px auto;
+    margin: 20px 0;
     border-radius: 5px;
     border: 1px solid #ddd;
 `;
