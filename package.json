@@ -2,6 +2,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "create-react-app": "^4.0.3",
+    "firebase-tools": "^9.7.0",
     "global": "^4.4.0",
     "node-sass": "4.14.1",
     "open-color": "^1.8.0",
