@@ -37,7 +37,7 @@ const Calendar = (props) => {
               return (
                 <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D'))
                  }}>
-                  <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
+                  <Day className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</Day>
                   <TodoContainer>
                     {filtered_calendar.map((list, index) => {
                       return (
@@ -63,12 +63,15 @@ const Calendar = (props) => {
     <Container>
       <CalendarContainer>
         <Head>
-          <ArrowLeft onClick={() => { dispatch(changeDate(1)) }} />
+          <ArrowLeft className='arrow' fontSize='large' onClick={() => { dispatch(changeDate(1))
+          props.history.push('/calendar') }} />
           <span className='title'>{props.date.format('MMMM YYYY')}</span>
-          <ArrowRight onClick={() => { dispatch(changeDate(2)) }} />
+          <ArrowRight className='arrow' fontSize='large' onClick={() => { dispatch(changeDate(2))
+          props.history.push('/calendar') }} />
         </Head>
         <DateBack>
-          <HomeIcon fontSize="large" color='primary' onClick={() => { dispatch(changeDate(3)) }} />
+          <HomeIcon className='home' fontSize="large" color='primary' onClick={() => { dispatch(changeDate(3))
+          props.history.push('/calendar') }} />
         </DateBack>
         <Line />
         <Date>
@@ -103,7 +106,7 @@ const Calendar = (props) => {
             <Button color='primary' onClick={() => { props.history.push('/calendar/allcalendar') }}>완료된 일정만 표시하기</Button>
           </CollectContainer>
           <FloatContainer onClick={() => { props.history.push('/calendar/adddate') }}>
-            <PlaylistAdd className='add' />
+            <PlaylistAdd className='add'/>
           </FloatContainer>
         </ButtonContainer>
       </CalendarContainer>
@@ -130,12 +133,22 @@ const Head = styled.div`
   flex-direction:row;
   align-items:center;
   justify-content:space-evenly;
+  & .arrow{
+    :hover{
+      color:gold;
+    }
+  }
 `;
 
 const DateBack = styled.div`
   display:flex;
   justify-content:flex-end;
   margin-right:20px;
+  & .home{
+    :hover{
+      color:powderblue;
+    }
+  }
 `;
 
 const Line = styled.hr`
@@ -220,7 +233,7 @@ const TodoLine = styled.hr`
   border: 1px dotted #ddd;
 `;
 
-const DoW = styled.div`
+const Day = styled.div`
   text-align:center;
   width:2em;
   height:2em;
@@ -229,6 +242,24 @@ const DoW = styled.div`
     color:black;
     background:pink;
   }
+  @media (max-width:750px) {
+    padding-top:0.2em;
+    padding-left:0.1em;
+    padding-right:0.1em;
+    font-size:xx-small;
+  }
+  @media (min-width:750px) {
+    padding-top:0.5em;
+    padding-left:0.2em;
+    padding-right:0.2em;
+  }
+`;
+
+const DoW = styled.div`
+  text-align:center;
+  width:2em;
+  height:2em;
+  border-radius:2em;
   @media (max-width:750px) {
     padding-top:0.2em;
     padding-left:0.1em;
@@ -300,8 +331,12 @@ const ButtonContainer = styled.div`
 
 const FloatContainer = styled.div`
   opacity:0.7;
-  top:60vh;
-  left:60vw;
+  margin: 0px;
+  top: auto;
+  right: 5%;
+  bottom: 5%;
+  left: auto;
+  position: fixed;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -310,12 +345,6 @@ const FloatContainer = styled.div`
   height:80px;
   border-radius: 40px;
   & .add{
-    margin: 0px;
-    top: auto;
-    right: 20px;
-    bottom: 20px;
-    left: auto;
-    position: fixed;
     color:white;
   }
   :hover{
@@ -324,12 +353,37 @@ const FloatContainer = styled.div`
       color:#3f51b5;
     }
   }
-  @media (max-width:750px) {
+  /* 아이패드보다 작아지는 이후 어느정도 유지하다가 650부터는 아이폰6~7 , 갤럭시 기준 으로 버튼 위치 고정 */
+  @media (max-width:650px) {
     margin-top:20px;
+    bottom:5%;
     width:40px;
     height:40px;
     border-radius:40px;
   }
+  @media (min-width:750px) {
+    bottom:7%
+  }
+  @media (min-width:1000px) {
+    right:10%
+  }
+  @media (min-width:1200px) {
+    right:13%
+  }
+  @media (min-width:1300px) {
+    right:15%;
+    bottom:5%;
+  }
+  @media (min-width:1400px) {
+    right:17%
+  }
+  @media (min-width:1500px) {
+    right:20%
+  }
+  @media (min-width:1650px) {
+    right:25%
+  }
+  
 `;
 
 const CollectContainer = styled.div`

@@ -29,6 +29,7 @@ const Todo = (props) => {
 
 
     return (
+        <Back>
         <Container>
             <Head>
                 <ButtonContainer color='primary'>
@@ -74,10 +75,13 @@ const Todo = (props) => {
                 </ButtonBox>
             </ListStyle>
         </Container>
+        </Back>
     );
 }
 
-
+const Back =styled.div`
+    background:gray;
+`;
 
 const Container = styled.div`
   max-width: 600px;

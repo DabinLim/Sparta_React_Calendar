@@ -34,7 +34,7 @@ const Calendar = (props) => {
               const filtered_calendar = calendar_list.filter(checkToday);
               return (
                 <Box key={i} onClick={() => { props.history.push('/calendar/todo/' + current.format('Y') + '/' + current.format('M') + '/' + current.format('D')) }}>
-                  <DoW className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</DoW>
+                  <Day className={`${isToday}${isNotThisMonth}`}>{current.format('D')}</Day>
                   <TodoContainer>
                   {filtered_calendar.map((list, index) => {
                     return (
@@ -60,12 +60,15 @@ const Calendar = (props) => {
     <Container>
       <CalendarContainer>
         <Head>
-          <ArrowLeft onClick={()=>{dispatch(changeDate(1))}}/>
+          <ArrowLeft className='arrow' onClick={()=>{dispatch(changeDate(1))
+          props.history.push('/allcalendar')}}/>
           <span className='title'>{props.date.format('MMMM YYYY')}</span>
-          <ArrowRight onClick={()=>{dispatch(changeDate(2))}}/>
+          <ArrowRight className='arrow' onClick={()=>{dispatch(changeDate(2))
+          props.history.push('/allcalendar')}}/>
         </Head>
         <DateBack>
-          <HomeIcon fontSize="large" color='primary' onClick={() => { dispatch(changeDate(3)) }} />
+          <HomeIcon className='home' fontSize="large" color='primary' onClick={() => { dispatch(changeDate(3))
+          props.history.push('/allcalendar') }} />
         </DateBack>
         <Line />
         <Date>
@@ -127,12 +130,22 @@ const Head = styled.div`
   flex-direction:row;
   align-items:center;
   justify-content:space-evenly;
+  & .arrow{
+    :hover{
+      color:gold;
+    }
+  }
 `;
 
 const DateBack = styled.div`
   display:flex;
   justify-content:flex-end;
   margin-right:20px;
+  & .home{
+    :hover{
+      color:powderblue;
+    }
+  }
 `;
 
 const Line = styled.hr`
@@ -218,6 +231,25 @@ const TodoLine = styled.hr`
 `;
 
 const DoW = styled.div`
+  text-align:center;
+  width:2em;
+  height:2em;
+  border-radius:2em;
+
+  @media (max-width:750px) {
+    padding-top:0.2em;
+    padding-left:0.1em;
+    padding-right:0.1em;
+    font-size:xx-small;
+  }
+  @media (min-width:750px) {
+    padding-top:0.5em;
+    padding-left:0.2em;
+    padding-right:0.2em;
+  }
+`;
+
+const Day = styled.div`
   text-align:center;
   width:2em;
   height:2em;
@@ -315,11 +347,35 @@ const FloatContainer = styled.div`
       color:#3f51b5;
     }
   }
-  @media (max-width:750px) {
+  /* 아이패드보다 작아지는 이후 어느정도 유지하다가 650부터는 아이폰6~7 , 갤럭시 기준 으로 버튼 위치 고정 */
+  @media (max-width:650px) {
     margin-top:20px;
+    bottom:5%;
     width:40px;
     height:40px;
     border-radius:40px;
+  }
+  @media (min-width:750px) {
+    bottom:7%
+  }
+  @media (min-width:1000px) {
+    right:10%
+  }
+  @media (min-width:1200px) {
+    right:13%
+  }
+  @media (min-width:1300px) {
+    right:15%;
+    bottom:5%;
+  }
+  @media (min-width:1400px) {
+    right:17%
+  }
+  @media (min-width:1500px) {
+    right:20%
+  }
+  @media (min-width:1650px) {
+    right:25%
   }
 `;
 

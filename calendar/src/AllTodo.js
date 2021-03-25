@@ -10,6 +10,7 @@ const AllTodo = (props) => {
     const calendar_list = useSelector(state => state.calendar.list);
     console.log(props)
     return (
+        <Back>
         <Container>
             <ListStyle id='up'>
                 <Line />
@@ -47,9 +48,14 @@ const AllTodo = (props) => {
                     }}>위로가기</Button>
                 </ButtonBox>
         </Container>
+        </Back>
 
     )
 }
+
+const Back = styled.div`
+    background:gray;
+`;
 
 const Container = styled.div`
     display:flex;
