@@ -22,7 +22,7 @@ const AllTodo = (props) => {
                                     {list.todo}
                                 </Title>
                                 <Date>
-                                    {list.year}-{list.month}-{list.day}
+                                    {list.year}-{list.month}-{list.day}<br/>time : {list.time}:{list.minute}
                                 </Date>
                             </DateContainer>
                             <Detail>

@@ -58,6 +58,8 @@ export const addCalendarFB = (calendar) => {
             year: calendar[2],
             month: calendar[3],
             day: calendar[4],
+            time: calendar[5],
+            minute: calendar[6],
             completed:false
         };
         calendar_db.add(todo_data).then(docRef => {
@@ -103,9 +105,10 @@ export default function reducer(state = initialState, action = {}) {
             
             if (action.calendar.length > 0) {
                 let calendar_list = action.calendar
-                calendar_list.sort((a, b) => a.year - b.year || a.month - b.month || a.day - b.day)
+                const sorted_calendar_list = calendar_list.sort((a, b) => a.year - b.year || a.month - b.month || a.day - b.day || a.time - b.time || a.minute - b.minute)
+                console.log(sorted_calendar_list)
                 return {
-                    list:calendar_list , date: moment()
+                    list:sorted_calendar_list , date: moment()
                 }
             }
 

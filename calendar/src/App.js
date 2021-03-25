@@ -12,6 +12,7 @@ import AllTodo from './AllTodo';
 import AllCalendar from './AllCalendar';
 import { withRouter } from 'react-router';
 import moment from 'moment';
+import { TitleSharp } from '@material-ui/icons';
 
 
 
@@ -39,6 +40,11 @@ class App extends React.Component {
   
   componentDidMount() {
     this.props.load()
+    console.log('hi')
+  }
+
+  componentDidUpdate() {
+    
   }
 
   render() {

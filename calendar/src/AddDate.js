@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import moment, { Moment as MomentTypes } from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCalendarFB } from './redux/modules/calendar';
-import React, {useRef, useState} from 'react';
+import { addCalendarFB, loadCalendarFB } from './redux/modules/calendar';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 
@@ -28,18 +28,26 @@ const AddDate = (props) => {
     const detail_text = useRef(null);
     const checkdate = () => {
         const date = document.querySelector('#date').value.split('-')
-        let year = parseInt(date[0])
-        let month = parseInt(date[1])
-        let day = parseInt(date[2])
-        if(todo_text.current.value =='' || detail_text.current.value==''){
+        let time_box = document.querySelector('#time').value.split(':')
+        let year = parseInt(date[0]);
+        let month =parseInt(date[1]);
+        let day = parseInt(date[2]);
+        let time = parseInt(time_box[0]);
+        let minute = parseInt(time_box[1]);
+        console.log(year,month,day,time,minute)
+        if (todo_text.current.value == '' || detail_text.current.value == '') {
             window.alert('일정을 입력하세요');
-        }else if(isNaN(year) || isNaN(month) || isNaN(day)) {
+        } else if (isNaN(year) || isNaN(month) || isNaN(day)) {
             window.alert('날짜를 선택하세요')
-        }else {
-            dispatch(addCalendarFB([todo_text.current.value,detail_text.current.value,year,month,day]))
-            props.history.goBack()
+        } else if (isNaN(time) || isNaN(minute)){
+            window.alert('시간을 선택하세요')
+        } else {
+            dispatch(addCalendarFB([todo_text.current.value, detail_text.current.value,year,month,day,time,minute]))
+            window.alert('일정이 추가 되었습니다.');
+            dispatch(loadCalendarFB())
+            props.history.goBack();
         }
-        
+
     }
     return (
         <Container>
@@ -52,9 +60,19 @@ const AddDate = (props) => {
                     <Text>날짜 : </Text>
                     <TextField
                         id="date"
-                        label="날짜를 선택하세요."
+                        label="Birthday"
                         type="date"
-                        defaultValue ={today.format('YYYY-MM-DD')}
+                        defaultValue={today.format('YYYY-MM-DD')}
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <TextField
+                        id="time"
+                        label="Alarm clock"
+                        type="time"
+                        defaultValue= '12:00'
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -63,13 +81,13 @@ const AddDate = (props) => {
                 </InputContainer>
                 <InputContainer>
                     <Text>상세내용 : </Text>
-                    <DetailInput ref={detail_text}/>
+                    <DetailInput ref={detail_text} />
                 </InputContainer>
             </AddContainer>
             <ButtonContainer>
                 <Button color="primary" onClick={checkdate}>추가하기</Button>
                 <Button color="primary" onClick={() => {
-                    props.history.goBack();
+                    props.history.push('/calendar');
                 }}>취소하기</Button>
             </ButtonContainer>
         </Container>
@@ -98,6 +116,9 @@ const AddContainer = styled.div`
 const InputContainer = styled.div`
     margin: 30px;
     margin-left: 10px;
+    & .time {
+        width:200px;
+    }
 `;
 
 const ButtonContainer = styled.div`

@@ -1,25 +1,48 @@
 import { Button, ButtonGroup } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCalendarFB } from './redux/modules/calendar';
+import { addCalendarFB, loadCalendarFB } from './redux/modules/calendar';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import React, {useRef, useState} from 'react';
 import styled from 'styled-components';
 
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
 
 const Add = (props) => {
 
     const dispatch = useDispatch();
     const todo_text = useRef(null);
     const detail_text = useRef(null);
+    const classes = useStyles();
     let url = document.location.href.split("/");
-    let day = url[url.length - 1];
-    let month = url[url.length -2];
-    let year = url[url.length -3];
+    let day = parseInt(url[url.length - 1]);
+    let month = parseInt(url[url.length -2]);
+    let year = parseInt(url[url.length -3]);
+
     const addTodoList = () => {
+        const time_box = document.querySelector('#time').value.split(':')
+        let time = parseInt(time_box[0]);
+        let minute = parseInt(time_box[1]);
+        console.log(year,month,day,time,minute)
         if(todo_text.current.value =='' || detail_text.current.value==''){
             window.alert('일정을 입력하세요');
+        }else if (isNaN(time) || isNaN(minute)) {
+            window.alert('시간을 선택하세요')
         }else{
-            dispatch(addCalendarFB([todo_text.current.value,detail_text.current.value,year,month,day]));
-            props.history.goBack()
+            dispatch(addCalendarFB([todo_text.current.value,detail_text.current.value,year,month,day,time,minute]));
+            window.alert('일정이 추가 되었습니다.');
+            dispatch(loadCalendarFB());
+            props.history.goBack();
         }
     }
 
@@ -30,6 +53,18 @@ const Add = (props) => {
                     <Text>일정 : </Text>
                     <TitleInput ref={todo_text} />
                 </InputContainer>
+                <InputContainer>
+                <TextField
+                        id="time"
+                        label="Alarm clock"
+                        type="time"
+                        defaultValue= '12:00'
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    </InputContainer>
                 <InputContainer>
                     <Text>상세내용 : </Text>
                     <DetailInput ref={detail_text}></DetailInput>
