@@ -7,12 +7,14 @@ const LOAD = "calendar/LOAD";
 const CREATE = "calendar/CREATE";
 const DELETE = "calendar/DELETE";
 const UPDATE = "calendar/UPDATE";
+const LOADED = 'calendar/LOADED';
 const CHANGE = 'num/CHANGE'
 
 
 const initialState = {
     list:[],
     date: moment(),
+    is_loaded:false
 };
 
 export const loadCalendar = (calendar) => {
@@ -33,6 +35,10 @@ export const updateCalendar = (calendar) => {
 
 export const changeDate = (num) => {
     return {type: CHANGE, num};
+}
+
+export const isLoaded = (loaded) => {
+    return {type: LOADED, loaded}
 }
 
 export const loadCalendarFB = () => {
@@ -62,9 +68,13 @@ export const addCalendarFB = (calendar) => {
             minute: calendar[6],
             completed:false
         };
+
+        dispatch(isLoaded(false));
+
         calendar_db.add(todo_data).then(docRef => {
             todo_data = { ...todo_data, id: docRef.id };
             dispatch(createCalendar(todo_data));
+            dispatch(isLoaded(true));
         })
     }
 }
@@ -72,13 +82,14 @@ export const addCalendarFB = (calendar) => {
 export const updateCalendarFB = (index) => {
     return function(dispatch, getState) {
         const old_calendar_data = getState().calendar.list[index];
-        let calendar_data = {...old_calendar_data, completed:true};
+        let calendar_data = {...old_calendar_data, completed:true,is_loaded:true};
         if (!calendar_data.id) {
             return;
         }
 
         calendar_db.doc(calendar_data.id).update(calendar_data).then(docRef => {
             dispatch(updateCalendar(index));
+            dispatch(isLoaded(true));
         })
     };
 };
@@ -92,8 +103,11 @@ export const deleteCalendarFB = (index) => {
         if (!old_calendar_data.id) {
             return;
         }
+
+
         calendar_db.doc(old_calendar_data.id).delete().then(docRef => {
             dispatch(deleteCalendar(index));
+            dispatch(isLoaded(true));
         })
     };
 };
@@ -108,7 +122,7 @@ export default function reducer(state = initialState, action = {}) {
                 const sorted_calendar_list = calendar_list.sort((a, b) => a.year - b.year || a.month - b.month || a.day - b.day || a.time - b.time || a.minute - b.minute)
                 console.log(sorted_calendar_list)
                 return {
-                    list:sorted_calendar_list , date: moment()
+                    list:sorted_calendar_list , date: moment(), is_loaded: true
                 }
             }
 
@@ -152,24 +166,31 @@ export default function reducer(state = initialState, action = {}) {
                 const calendar_list = [...state.list]
                 return {
                     list: calendar_list,
-                    date: new_date
+                    date: new_date,
+                    is_loaded:true
                 }
             } else if(action.num ==2){
                 const new_date = state.date.add(1,'M');
                 const calendar_list = [...state.list]
                 return {
                     list: calendar_list,
-                    date: new_date
+                    date: new_date,
+                    is_loaded:true
                 }
             }else {
                 const new_date = moment()
                 const calendar_list = [...state.list]
                 return {
                     list: calendar_list,
-                    date: new_date
+                    date: new_date,
+                    is_loaded: true
                 }
             }
         }
+        case 'calendar/LOADED': {
+            return {...state, is_loaded: action.loaded}
+        }
+
     }
             
         

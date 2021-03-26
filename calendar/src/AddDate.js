@@ -1,10 +1,10 @@
-import { Button, ButtonGroup } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import moment, { Moment as MomentTypes } from 'moment';
-import { useSelector, useDispatch } from 'react-redux';
-import { addCalendarFB, loadCalendarFB } from './redux/modules/calendar';
-import React, { useRef, useState } from 'react';
+import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { addCalendarFB } from './redux/modules/calendar';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
 
@@ -44,12 +44,12 @@ const AddDate = (props) => {
         } else {
             dispatch(addCalendarFB([todo_text.current.value, detail_text.current.value,year,month,day,time,minute]))
             window.alert('일정이 추가 되었습니다.');
-            dispatch(loadCalendarFB())
             props.history.goBack();
         }
 
     }
     return (
+        <Back>
         <Container>
             <AddContainer>
                 <InputContainer>
@@ -60,7 +60,7 @@ const AddDate = (props) => {
                     <Text>날짜 : </Text>
                     <TextField
                         id="date"
-                        label="Birthday"
+                        label="날짜를 입력하세요"
                         type="date"
                         defaultValue={today.format('YYYY-MM-DD')}
                         className={classes.textField}
@@ -70,7 +70,7 @@ const AddDate = (props) => {
                     />
                     <TextField
                         id="time"
-                        label="Alarm clock"
+                        label="시간을 입력하세요"
                         type="time"
                         defaultValue= '12:00'
                         className={classes.textField}
@@ -91,9 +91,13 @@ const AddDate = (props) => {
                 }}>취소하기</Button>
             </ButtonContainer>
         </Container>
+        </Back>
 
     )
 }
+const Back = styled.div`
+    background:gray;
+`;
 
 const Container = styled.div`
     display:flex;

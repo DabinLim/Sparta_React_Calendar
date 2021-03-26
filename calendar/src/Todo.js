@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateCalendarFB, deleteCalendarFB } from './redux/modules/calendar';
-import { Button, ButtonGroup } from '@material-ui/core';
+import { updateCalendarFB, deleteCalendarFB, loadCalendarFB } from './redux/modules/calendar';
+import { Button } from '@material-ui/core';
 import styled from "styled-components";
 
 
@@ -10,9 +10,6 @@ const Todo = (props) => {
     const calendar_list = useSelector(state => state.calendar.list);
     useEffect(()=>{window.scrollTo({top:1000,left:0, behavior: 'smooth'})})
 
-    const scrollDown = () => {
-        window.scrollTo({top:1000 ,left:0 ,behavior:'smooth'})
-    }
     let url = document.location.href.split("/");
     let day = url[url.length - 1];
     let month = url[url.length - 2];
@@ -39,7 +36,8 @@ const Todo = (props) => {
             </Head>
             <Line />
             <ListStyle id='up'>
-                {filtered_calendar.map((list, index) => {
+                {calendar_list.map((list, index) => {
+                    if (list.year == year && list.month == month && list.day == day ){
                     return (
                         <TodoContainer key={index} completed={list.completed}>
                             <DateContainer>
@@ -55,15 +53,15 @@ const Todo = (props) => {
                             </Detail>
                             <DeleteContainer>
                                 <Button color='primary' onClick={() => {
-                                    dispatch(updateCalendarFB(calendar_list.indexOf(list)))
-                                    props.history.push('/calendar/todo/'+year+'/'+month+'/'+day)
+                                    dispatch(updateCalendarFB(index))
                                 }}>완료하기</Button>
                                 <Button color='primary' onClick={() => {
-                                    dispatch(deleteCalendarFB(calendar_list.indexOf(list)))
+                                    dispatch(deleteCalendarFB(index))
                                 }}>삭제하기</Button>
                             </DeleteContainer>
                         </TodoContainer>
                     );
+                }
                 })}
                 <ButtonBox>
                     <ButtonUp onClick={() => {

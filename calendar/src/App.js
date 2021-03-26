@@ -10,15 +10,16 @@ import Add from './Add';
 import AddDate from'./AddDate';
 import AllTodo from './AllTodo';
 import AllCalendar from './AllCalendar';
+import Spinner from './Sppiner';
 import { withRouter } from 'react-router';
-import moment from 'moment';
-import { TitleSharp } from '@material-ui/icons';
+
 
 
 
 const mapStateToProps = (state) => ({
   calendar_list: state.calendar.list,
-  date : state.calendar.date
+  date : state.calendar.date,
+  is_loaded: state.calendar.is_loaded
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -40,15 +41,19 @@ class App extends React.Component {
   
   componentDidMount() {
     this.props.load()
-    console.log('hi')
+    console.log('first load')
   }
 
-  componentDidUpdate() {
-    
+  componentDidUpdate(prevProps,prevState) {
+    if (this.props.calendar_list === prevProps.calendar_list) {
+      this.props.load();
+      console.log('render again')
+    }
   }
 
   render() {
-    return (
+    return (<div>
+      {!this.props.is_loaded ? (<Spinner />) : (
       <Container>
         <Route exact path='/' exact render={(props) => <Main history={props.history} list={this.props.calendar_list} />} />
         <Switch>
@@ -65,6 +70,8 @@ class App extends React.Component {
           <Route path='/calendar/allcalendar' render={(props) => <AllCalendar history={props.history} list={this.props.calendar_list} date={this.props.date}/>} />
         </Switch>
       </Container>
+        )}
+      </div>
     )
   };
 };

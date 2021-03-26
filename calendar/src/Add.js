@@ -1,9 +1,9 @@
-import { Button, ButtonGroup } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import { addCalendarFB, loadCalendarFB } from './redux/modules/calendar';
+import { Button } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { addCalendarFB } from './redux/modules/calendar';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import styled from 'styled-components';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Add = (props) => {
-
     const dispatch = useDispatch();
     const todo_text = useRef(null);
     const detail_text = useRef(null);
@@ -41,12 +40,12 @@ const Add = (props) => {
         }else{
             dispatch(addCalendarFB([todo_text.current.value,detail_text.current.value,year,month,day,time,minute]));
             window.alert('일정이 추가 되었습니다.');
-            dispatch(loadCalendarFB());
             props.history.goBack();
         }
     }
 
     return (
+        <Back>
         <Container>
             <AddContainer>
                 <InputContainer>
@@ -56,7 +55,7 @@ const Add = (props) => {
                 <InputContainer>
                 <TextField
                         id="time"
-                        label="Alarm clock"
+                        label="시간을 입력하세요"
                         type="time"
                         defaultValue= '12:00'
                         className={classes.textField}
@@ -78,9 +77,12 @@ const Add = (props) => {
                 }}>취소하기</Button>
             </ButtonContainer>
         </Container>
+        </Back>
     )
 }
-
+const Back = styled.div`
+    background-color:gray;
+`;
 
 const Container = styled.div`
     display:flex;
@@ -90,7 +92,7 @@ const Container = styled.div`
     min-height: 60vh;
     background-color: lavender;
     padding: 16px;
-    margin: 20px 0;
+    margin: 20px auto;
     border-radius: 5px;
     border: 1px solid #ddd;
 `;
@@ -119,7 +121,7 @@ const TitleInput = styled.input`
     width:100%;
 `;
 
-const DetailInput = styled.input`
+const DetailInput = styled.textarea`
     width:100%;
     height:40vh;
 `;
